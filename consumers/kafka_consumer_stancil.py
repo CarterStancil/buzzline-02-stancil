@@ -85,6 +85,8 @@ def main() -> None:
     # Create the Kafka consumer using the helpful utility function.
     consumer = create_kafka_consumer(topic, group_id)
 
+    target_sentence = "Call your mom today"
+
      # Poll and process messages
     logger.info(f"Polling messages from topic '{topic}'...")
     try:
@@ -92,6 +94,8 @@ def main() -> None:
             message_str = message.value
             logger.debug(f"Received message at offset {message.offset}: {message_str}")
             process_message(message_str)
+            if target_sentence in message_str:
+                logger.warning(f"⚠️ Found target sentence in message: {message_str}")
     except KeyboardInterrupt:
         logger.warning("Consumer interrupted by user.")
     except Exception as e:
